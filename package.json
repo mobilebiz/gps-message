@@ -1,0 +1,24 @@
+{
+  "name": "vcr-location-sms",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@vonage/server-sdk": "^3.25.1",
+    "@vonage/vcr-sdk": "^1.4.0",
+    "dotenv": "^17.2.4",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "supertest": "^7.2.2"
+  }
+}

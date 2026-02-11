@@ -1,0 +1,6 @@
+node_modules/
+vcr.yml
+.env
+.DS_Store
+coverage/
+.vcr/

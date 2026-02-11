@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCR Location SMS Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <div class="card">
+            <h3>Add New User</h3>
+            <form id="addUserForm">
+                <div class="form-group">
+                    <label for="subdomain">サイボウズドメイン（xxxxxxx.cybozu.comのxxxxxxxの部分）:</label>
+                    <input type="text" id="subdomain" name="subdomain" placeholder="example" required>
+                </div>
+                <div class="form-group">
+                    <label for="phoneNumber">通知先電話番号（例：8190123435678）:</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="819012345678" pattern="^\d{10,15}$" required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="isActive" name="isActive" checked> Active
+                    </label>
+                </div>
+                <button type="submit">Save User</button>
+                <button type="button" onclick="document.getElementById('addUserForm').reset()" class="reset-btn">Reset</button>
+            </form>
+        </div>
+        
+        <h3>Registered Users</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Subdomain</th>
+                    <th>Phone Number</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+                <!-- Users will be populated here -->
+            </tbody>
+        </table>
+    </div>
+    <script src="/js/admin.js"></script>
+</body>
+</html>

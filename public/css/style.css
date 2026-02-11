@@ -1,0 +1,25 @@
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #e9ecef; color: #333; }
+h1 { color: #212529; margin-bottom: 20px; font-weight: 600; }
+.container { max-width: 800px; margin: 0 auto; }
+.card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #dee2e6; }
+.form-group { margin-bottom: 15px; }
+label { display: block; margin-bottom: 8px; font-weight: 500; color: #495057; }
+input[type="text"], input[type="tel"] { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ced4da; border-radius: 4px; font-size: 16px; transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out; }
+input[type="text"]:focus, input[type="tel"]:focus { border-color: #80bdff; outline: 0; box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25); }
+button { background-color: #4da64d; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; font-size: 16px; font-weight: 500; transition: background-color 0.2s; }
+button:hover { background-color: #408c40; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 20px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #dee2e6; }
+th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #dee2e6; }
+th { background-color: #f8f9fa; font-weight: 600; color: #495057; }
+tr:last-child td { border-bottom: none; }
+tr:hover { background-color: #f8f9fa; }
+.status-active { color: #28a745; font-weight: 600; }
+.status-inactive { color: #dc3545; font-weight: 600; }
+.action-btn { background-color: #007bff; color: white; padding: 6px 12px; font-size: 14px; text-decoration: none; border-radius: 4px; margin-right: 5px; border: none; cursor: pointer; transition: background-color 0.2s; }
+.action-btn:hover { background-color: #0056b3; }
+.edit-btn { background-color: #2196F3; color: white; padding: 6px 12px; font-size: 14px; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px; transition: background-color 0.2s; }
+.edit-btn:hover { background-color: #0b7dda; }
+button.delete-btn { background-color: transparent; color: #dc3545; padding: 6px 12px; font-size: 20px; vertical-align: middle; border: none; cursor: pointer; }
+button.delete-btn:hover { background-color: rgba(220, 53, 69, 0.1); color: #b21f2d; }
+.reset-btn { background-color: #6c757d; color: white; margin-left: 10px; }
+.reset-btn:hover { background-color: #5a6268; }

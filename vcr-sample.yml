@@ -1,0 +1,56 @@
+project:
+  name: vcr-location-sms
+  region: aws.apse1
+
+instance:
+  name: dev
+  runtime: nodejs18
+  application-id: YOUR_VONAGE_APPLICATION_ID_HERE
+  entrypoint:
+    - node
+    - index.js
+  environment:
+    - name: TARGET_LAT
+      value: "35.681236"  # Tokyo Station by default
+    - name: TARGET_LON
+      value: "139.767125"
+    - name: RADIUS
+      value: "100"            # in meters
+    - name: COOLDOWN_MIN
+      value: "60"       # in minutes
+    - name: MESSAGE_BODY
+      value: "エリアに入りました"
+    - name: VONAGE_API_KEY
+      value: "YOUR_VONAGE_API_KEY_HERE"
+    - name: VONAGE_API_SECRET
+      value: "YOUR_VONAGE_API_SECRET_HERE"
+    - name: VONAGE_FROM
+      value: "VONAGE_SMS"
+    - name: ADMIN_PASSWORD
+      value: "admin"
+
+debug:
+  name: debug
+  application-id: YOUR_VONAGE_APPLICATION_ID_HERE
+  entrypoint:
+    - node
+    - index.js
+  environment:
+    - name: TARGET_LAT
+      value: "35.681236"
+    - name: TARGET_LON
+      value: "139.767125"
+    - name: RADIUS
+      value: "100"
+    - name: COOLDOWN_MIN
+      value: "1" # Short cooldown for debug/testing
+    - name: MESSAGE_BODY
+      value: "エリアに入りました(Debug)"
+    - name: VONAGE_API_KEY
+      value: "YOUR_VONAGE_API_KEY_HERE"
+    - name: VONAGE_API_SECRET
+      value: "YOUR_VONAGE_API_SECRET_HERE"
+    - name: VONAGE_FROM
+      value: "VONAGE_SMS"
+    - name: ADMIN_PASSWORD
+      value: "admin"
