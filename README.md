@@ -76,6 +76,8 @@ graph TD
 
 VCRインスタンスのルートURL (`https://<あなたのVCRインスタンスURL>/`) にアクセスすると、管理者ダッシュボードが表示されます。
 
+![Admin UI](images/ui.png)
+
 ### ユーザーの登録
 
 1.  **kintoneサブドメイン**を入力します。
