@@ -13,14 +13,14 @@ graph TD
     Vonage[Vonage SMS API]
     
     User -->|GPS位置情報を登録| Kintone
-    Kintone -->|Webhook (lat, lon)| VCR
+    Kintone -->|"Webhook (lat, lon)"| VCR
     
     subgraph VCR_Internal [Vonage Cloud Runtime]
         VCR -->|設定参照| State[(VCR State)]
         VCR -->|ジオフェンス判定| Logic{判定}
     end
     
-    Logic -->|範囲内 & CoolDown OK| Vonage
+    Logic -->|"範囲内 & CoolDown OK"| Vonage
     Vonage -->|SMS通知| User
 ```
 
