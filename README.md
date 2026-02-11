@@ -3,6 +3,27 @@
 kintoneのレコード追加/更新時のWebhookを受け取り、位置情報（緯度・経度）に基づいてジオフェンス判定を行い、対象エリア内の場合にVonage SMS APIを使用して通知を送信するサービスです。
 Vonage Cloud Runtime (VCR) 上で動作するように設計されています。
 
+## システム構成図
+
+```mermaid
+graph TD
+    User((ユーザー))
+    Kintone[kintoneアプリ]
+    VCR[VCR Location SMS Service]
+    Vonage[Vonage SMS API]
+    
+    User -->|GPS位置情報を登録| Kintone
+    Kintone -->|Webhook (lat, lon)| VCR
+    
+    subgraph VCR_Internal [Vonage Cloud Runtime]
+        VCR -->|設定参照| State[(VCR State)]
+        VCR -->|ジオフェンス判定| Logic{判定}
+    end
+    
+    Logic -->|範囲内 & CoolDown OK| Vonage
+    Vonage -->|SMS通知| User
+```
+
 ## 機能
 
 *   **Webhookレシーバー**: kintoneからのWebhook (`POST /webhook/location`) を受信します。
@@ -11,50 +32,53 @@ Vonage Cloud Runtime (VCR) 上で動作するように設計されています�
 *   **ユーザー管理 (Admin UI)**: kintoneのサブドメインごとに通知先の電話番号を管理するWebインターフェースを提供します。
 *   **クールダウン機能**: 短時間での連続通知を防ぐためのクールダウンタイマーを実装しています。
 
+## kintoneアプリのセットアップ
+
+本サービスを利用するには、kintoneアプリ側で以下の設定が必要です。
+
+### 1. アプリのフィールド設定
+
+アプリに以下のフィールドコードを持つフィールドを作成してください。
+
+| フィールド名 | フィールドタイプ | フィールドコード (必須) | 説明 |
+| --- | --- | --- | --- |
+| 緯度 | 数値 (または1行テキスト) | `lat` | GPSの緯度情報 |
+| 経度 | 数値 (または1行テキスト) | `lon` | GPSの経度情報 |
+
+※ その他のフィールド（日時やユーザー名など）は自由に追加して構いません。
+
+### 2. Webhookの設定
+
+アプリの設定 > Webhook から、以下の内容でWebhookを追加します。
+
+*   **Webhook URL**: `https://<あなたのVCRインスタンスURL>/webhook/location`
+    *   例: `https://neru-fe479d05-vcr-location-sms-dev.apse1.runtime.vonage.cloud/webhook/location`
+*   **通知のタイミング**:
+    *   [x] レコードの追加
+    *   [x] レコードの編集
+*   **有効化**: チェックを入れて保存します。
+
+## 利用方法 (Admin UI)
+
+VCRインスタンスのルートURL (`https://<あなたのVCRインスタンスURL>/`) にアクセスすると、管理者ダッシュボードが表示されます。
+
+### ユーザーの登録
+
+1.  **kintoneサブドメイン**を入力します。
+    *   URLが `https://example.cybozu.com/k/123/` の場合、サブドメインは `example` です。
+2.  **通知先電話番号**を入力します (国番号付き、例: `819012345678`)。
+3.  `Active` にチェックが入っていることを確認し、「Save User」をクリックします。
+
+### 設定の変更・削除
+
+*   **編集**: リストの「Edit」ボタンをクリックすると、電話番号やステータス(Active/Inactive)を変更できます。
+*   **削除**: ゴミ箱アイコンをクリックすると、登録を解除できます。
+
 ## 必要要件
 
 *   Node.js v18以上
 *   Vonage API アカウント (API Key, API Secret)
 *   Vonage Cloud Runtime (VCR) CLI
-
-## インストール
-
-```bash
-npm install
-```
-
-## ローカル開発
-
-ローカル環境ではVCRの機能をモックして動作します。SMS送信はコンソールログに出力されます。
-
-```bash
-npm start
-```
-
-ブラウザで `http://localhost:3000` にアクセスすると管理画面が表示されます。
-
-## テスト
-
-Jestを使用したユニットテスト/統合テストが含まれています。
-
-```bash
-# テストの実行
-npm test
-
-# VCRポートを模倣して実行する場合（モックロジックの一部が変わります）
-VCR_PORT=3000 npm test
-```
-
-## デプロイ
-
-VCRへのデプロイは以下のコマンドで行います。設定は `vcr.yml` に記述されています。
-
-```bash
-# 事前にVCR CLIのセットアップが必要です
-vcr deploy
-```
-
-`vcr.yml` 内の環境変数は、実際のデプロイ時にVCRのダッシュボードまたはCLI設定と一致させてください。
 
 ## 環境変数 (vcr.yml)
 
@@ -70,22 +94,23 @@ vcr deploy
 | `MESSAGE_BODY` | SMS本文 | `Entered GeoFence` |
 | `VONAGE_APPLICATION_ID` | Vonage Application ID | - |
 
-## API エンドポイント
+## インストール & ローカル開発
 
-### Webhook
-*   **POST** `/webhook/location`
-    *   kintoneからのWebhookペイロードを受け取ります。
-    *   Body: `{ "url": "...", "record": { "lat": { "value": "..." }, "lon": { "value": "..." } } }`
+```bash
+npm install
+npm start
+```
+ブラウザで `http://localhost:3000` にアクセスすると管理画面が表示されます。
+※ ローカル環境ではVCR機能はモックとして動作し、SMSはコンソールログに出力されます。
 
-### User Management API
-*   **GET** `/api/users`: 登録ユーザー一覧を取得
-*   **POST** `/api/users`: ユーザー登録/更新
-    *   Body: `{ "subdomain": "example", "phoneNumber": "8190...", "isActive": true }`
-*   **DELETE** `/api/users/:subdomain`: ユーザー削除
+## テスト
 
-## プロジェクト構成
+```bash
+npm test
+```
 
-*   `index.js`: エントリーポイント、APIサーバーロジック
-*   `public/`: 静的ファイル (Admin UIのHTML, CSS, JS)
-*   `tests/`: テストコード
-*   `vcr.yml`: VCRデプロイ設定
+## デプロイ
+
+```bash
+vcr deploy
+```
