@@ -1,6 +1,6 @@
 # VCR Location SMS Service
 
-kintoneのレコード追加/更新時のWebhookを受け取り、位置情報（緯度・経度）に基づいてジオフェンス判定を行い、対象エリア内の場合にVonage SMS APIを使用して通知を送信するサービスです。
+kintoneのレコード追加時のWebhookを受け取り、位置情報（緯度・経度）に基づいてジオフェンス判定を行い、対象エリア内の場合にVonage SMS APIを使用して通知を送信するサービスです。
 Vonage Cloud Runtime (VCR) 上で動作するように設計されています。
 
 ## システム構成図
@@ -32,6 +32,21 @@ graph TD
 *   **ユーザー管理 (Admin UI)**: kintoneのサブドメインごとに通知先の電話番号を管理するWebインターフェースを提供します。
 *   **クールダウン機能**: 短時間での連続通知を防ぐためのクールダウンタイマーを実装しています。
 
+## ジオフェンス判定仕様
+
+本サービスでは、以下のロジックで通知可否を判定しています。
+
+1.  **距離計算**:
+    *   **Haversine formula (半正矢関数)** を使用して、地球を球体と見なした2点間（ターゲット地点と現在地）の直線距離をメートル単位で計算します。
+    *   ターゲット地点は環境変数 `TARGET_LAT`, `TARGET_LON` で設定します。
+
+2.  **エリア判定**:
+    *   計算された距離が 環境変数 `RADIUS` (メートル) **以下** の場合、**エリア内**と判定します。
+
+3.  **通知抑制 (クールダウン)**:
+    *   エリア内であっても、同一ユーザー（サブドメイン）に対して前回の通知から `COOLDOWN_MIN` (分) が経過していない場合、通知は送信されません。
+    *   これにより、境界付近での頻繁な通知（チャタリング）や、短時間での連続通知を防止しています。
+
 ## kintoneアプリのセットアップ
 
 本サービスを利用するには、kintoneアプリ側で以下の設定が必要です。
@@ -52,10 +67,9 @@ graph TD
 アプリの設定 > Webhook から、以下の内容でWebhookを追加します。
 
 *   **Webhook URL**: `https://<あなたのVCRインスタンスURL>/webhook/location`
-    *   例: `https://neru-fe479d05-vcr-location-sms-dev.apse1.runtime.vonage.cloud/webhook/location`
+    *   例: `https://neru-XXXXXXXX-vcr-location-sms-dev.apse1.runtime.vonage.cloud/webhook/location`
 *   **通知のタイミング**:
     *   [x] レコードの追加
-    *   [x] レコードの編集
 *   **有効化**: チェックを入れて保存します。
 
 ## 利用方法 (Admin UI)
