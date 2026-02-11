@@ -62,11 +62,11 @@ vcr deploy
 | --- | --- | --- |
 | `VONAGE_API_KEY` | Vonage API Key | - |
 | `VONAGE_API_SECRET` | Vonage API Secret | - |
-| `VONAGE_FROM` | SMS送信元ID | `VONAGE_SMS` |
+| `VONAGE_FROM` | SMS送信元ID | `VonageSMS` |
 | `TARGET_LAT` | ターゲット地点の緯度 | `35.681236` |
 | `TARGET_LON` | ターゲット地点の経度 | `139.767125` |
-| `RADIUS` | ジオフェンス半径 (メートル) | `100` |
-| `COOLDOWN_MIN` | 通知のクールダウン時間 (分) | `60` |
+| `RADIUS` | ジオフェンス半径 (メートル) | `300` |
+| `COOLDOWN_MIN` | 通知のクールダウン時間 (分) | `20` |
 | `MESSAGE_BODY` | SMS本文 | `Entered GeoFence` |
 | `VONAGE_APPLICATION_ID` | Vonage Application ID | - |
 

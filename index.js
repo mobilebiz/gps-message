@@ -149,8 +149,9 @@ app.post('/webhook/location', async (req, res) => {
                 try {
                     await vonage.sms.send({
                         to: userConfig.phoneNumber,
-                        from: process.env.VONAGE_FROM || "VONAGE_SMS",
-                        text: process.env.MESSAGE_BODY || "Entered GeoFence"
+                        from: process.env.VONAGE_FROM || "VonageSMS",
+                        text: process.env.MESSAGE_BODY || "Entered GeoFence",
+                        type: 'unicode'
                     });
                     console.log("SMS Sent Successfully via Vonage API");
                 } catch (smsError) {
